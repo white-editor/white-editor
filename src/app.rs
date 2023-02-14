@@ -3,7 +3,7 @@ use winit::{
     event_loop::{ControlFlow, EventLoop},
 };
 
-use crate::{text_area::TextArea, window::Window};
+use crate::window::Window;
 
 pub struct Application {
     wgpu_instance: wgpu::Instance,
@@ -44,16 +44,6 @@ impl Application {
                 window_id,
             } if window_id == window.id() => {
                 window.update();
-
-                match window.render() {
-                    Ok(_) => {}
-                    // Reconfigure the surface if lost
-                    Err(wgpu::SurfaceError::Lost) => window.resize(window.size),
-                    // The system is out of memory, we should probably quit
-                    Err(wgpu::SurfaceError::OutOfMemory) => *control_flow = ControlFlow::Exit,
-                    // All other errors (Outdated, Timeout) should be resolved by the next frame
-                    Err(e) => eprintln!("{:?}", e),
-                }
 
                 if !window.input(event) {
                     match event {
